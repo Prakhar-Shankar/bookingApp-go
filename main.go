@@ -42,6 +42,13 @@ func main(){
 
 	fmt.Printf("Enter the number of tickets you want to book: ")
 	fmt.Scan(&userTicket)
+
+	// Write the logic if user wants to book more tickets than remaining tickets, we want to either break the loop or keep asking the user about the details.
+
+	if userTicket > remainingTickets{
+		fmt.Printf("User is trying to book %v tickets, but only %v tickets are remaining\n", userTicket, remainingTickets)
+		continue
+	}
 	
 	// Writing the booking app logic that is counting the remaining ticket 
 	remainingTickets = remainingTickets - userTicket
@@ -52,6 +59,7 @@ func main(){
 
 	firstNames := []string{}
 	
+	// here we have to give index and a var but as we are not using index we are giving _.
 	for _, booking := range bookings{
 		var name = strings.Fields(booking)
 		firstNames = append(firstNames, name[0])
@@ -59,6 +67,12 @@ func main(){
 
 	fmt.Printf("These are all the bookings: %v\n", firstNames)
 
+	if remainingTickets == 0 {
+		fmt.Println("All the tickets are booked. Please try next year.")
+		break
+	}
+
 }
+	
 
 }
