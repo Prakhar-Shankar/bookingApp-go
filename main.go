@@ -13,14 +13,11 @@ func main(){
 	const totalTickets int = 50
 	var remainingTickets uint = 50 
 
-		// Creating a slice to show all the bookings 
+	// Creating a slice to show all the bookings 
 	bookings := []string {} // This is slice and it is an abstraction of the array, it is dynamic hence no fixed size. For array we just need to specify the size, i.e., bookings := [50]string{}
 
-	// Format the output from here 
-	
-	fmt.Printf("Welcome to %v booking application\n", conferenceName)
-	fmt.Printf("We have total of %v tickets out of which %v are still available\n", totalTickets, remainingTickets)
-	fmt.Println("Get your tickets here to attend")
+	//Function call
+	greetUser(conferenceName, totalTickets, remainingTickets)
 
 	for{
 	// Define username and print here 
@@ -43,21 +40,51 @@ func main(){
 	fmt.Printf("Enter the number of tickets you want to book: ")
 	fmt.Scan(&userTicket)
 
-	// Write the logic if user wants to book more tickets than remaining tickets, we want to either break the loop or keep asking the user about the details.
+	// For validation we are defining three vars which contains three different conditions, we are using these conditions in the for loop.
 
-	if userTicket > remainingTickets{
-		fmt.Printf("User is trying to book %v tickets, but only %v tickets are remaining\n", userTicket, remainingTickets)
-		continue
-	}
-	
-	// Writing the booking app logic that is counting the remaining ticket 
+	isValidName, isValidEmail, isValidTicketNumber := validateUserInput(firstName, lastName, email, userTicket, remainingTickets)
+
+
+	if isValidName && isValidEmail && isValidTicketNumber{
+		// Writing the booking app logic that is counting the remaining ticket 
 	remainingTickets = remainingTickets - userTicket
 
 	fmt.Printf("The user %v %v, booked %v tickets. A confirmation mail will be sent at %v. Thank you !!\n", firstName, lastName, userTicket, email)
 	bookings = append(bookings, firstName + " " + lastName)
 	fmt.Printf("%v tickets are remaining for %v\n", remainingTickets, conferenceName)
 
-	firstNames := []string{}
+	//Function call
+	firstName := getFirstNames(bookings)
+	fmt.Printf("These are the bookings %v\n", firstName)
+	
+	}else{
+		// Here we want to notify the user where the input data is invalid hence we have written output for every condition, instead of a generic statement.
+
+		if !isValidName{
+			fmt.Println("First name or the last name entered by the user is invalid.")
+		}
+		if !isValidEmail{
+			fmt.Println("The email entered by the user does not contain @")
+		}
+		if !isValidTicketNumber{
+			fmt.Println("The number of ticket entered by the user is invalid")
+		}
+
+	}
+}
+}
+
+//Lets create a function which does the job of greeting, we want to keep the main fucntion clean.
+func greetUser(confName string, confTickets int, remainingTickets uint){
+	fmt.Printf("Welcome to %v booking application\n", confName)
+	fmt.Printf("We have total of %v tickets and %v are still remaining\n", confTickets, remainingTickets)
+	fmt.Printf("Get the tickets to attend!!\n")
+
+}
+
+//Creating a function which prints the first names of the users.
+func getFirstNames(bookings []string) []string{
+	firstNames := []string{} 
 	
 	// here we have to give index and a var but as we are not using index we are giving _.
 	for _, booking := range bookings{
@@ -65,14 +92,13 @@ func main(){
 		firstNames = append(firstNames, name[0])
 	}
 
-	fmt.Printf("These are all the bookings: %v\n", firstNames)
-
-	if remainingTickets == 0 {
-		fmt.Println("All the tickets are booked. Please try next year.")
-		break
-	}
-
+	return firstNames
 }
-	
 
+//Function for user input validation
+func validateUserInput(firstName string, lastName string, email string, userTicket uint, remainingTickets uint) (bool, bool, bool){
+	isValidName := len(firstName) >= 2 && len(lastName) >= 2
+	isValidEmail := strings.Contains(email, "@")
+	isValidTicketNumber := userTicket > 0 && userTicket <= remainingTickets
+	return isValidName, isValidEmail, isValidTicketNumber
 }
